@@ -1,5 +1,13 @@
 import { Exclude } from 'class-transformer';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import Address from './address.entity';
 import Role from './role.entity';
 
@@ -19,29 +27,29 @@ class User {
   public password: string;
 
   @Column({
-    nullable: true
+    nullable: true,
   })
   @Exclude()
   public currentHashedRefreshToken?: string;
 
   @OneToOne(() => Address, {
     eager: true,
-    cascade: true
+    cascade: true,
   })
   @JoinColumn()
   public address: Address;
 
   @ManyToMany(() => Role)
   @JoinTable({
-    name: "user_roles", // table name for the junction table of this relation
+    name: 'user_roles', // table name for the junction table of this relation
     joinColumn: {
-      name: "user",
-      referencedColumnName: "id"
+      name: 'user',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: "role",
-      referencedColumnName: "id"
-    }
+      name: 'role',
+      referencedColumnName: 'id',
+    },
   })
   roles: Role[];
 }

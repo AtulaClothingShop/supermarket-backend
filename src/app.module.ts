@@ -38,18 +38,16 @@ import { ProductModule } from './modules/product/product.module';
         JWT_EXPIRATION_TIME: Joi.string().required(),
         JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
         JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
-      })
+      }),
     }),
     DatabaseModule,
     AuthModule,
     UsersModule,
-    ProductModule
+    ProductModule,
   ],
 })
 export class AppModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(LoggerMiddleware)
-      .forRoutes('*');
+    consumer.apply(LoggerMiddleware).forRoutes('*');
   }
 }

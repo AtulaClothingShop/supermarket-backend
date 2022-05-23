@@ -1,32 +1,40 @@
 import { float } from '@elastic/elasticsearch/lib/api/types';
-import { Column, Entity, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import Category from './category.entity';
 import ProductInfo from './productInfo.entity';
- 
+
 export enum ProductTypes {
-  MAN = "man",
-  WOMAN = "woman",
+  MAN = 'man',
+  WOMAN = 'woman',
 }
 
 @Entity()
 class Product {
   @PrimaryGeneratedColumn()
   public id?: number;
- 
+
   @Column({ unique: true })
   public code: string;
- 
+
   @Column()
   public name: string;
- 
+
   @Column()
   public description: string;
 
   @Column()
-  public price: float
+  public price: float;
 
   @Column({
-    type: "enum",
+    type: 'enum',
     enum: ProductTypes,
   })
   public type: string;
@@ -40,27 +48,27 @@ class Product {
   @Column()
   public discountAmount: number;
 
-  @Column()
+  @Column('text', { array: true })
   public sizeRanges: string[];
 
-  @ManyToOne(() => ProductInfo, (productInfo) => productInfo.product, {
-    cascade: true
+  @OneToMany(() => ProductInfo, (productInfo) => productInfo.product, {
+    cascade: true,
   })
-  public productInfos: ProductInfo[]
+  public productInfos: ProductInfo[];
 
   @ManyToMany(() => Category)
   @JoinTable({
-    name: "product_categories", // table name for the junction table of this relation
+    name: 'product_categories', // table name for the junction table of this relation
     joinColumn: {
-      name: "product",
-      referencedColumnName: "id"
+      name: 'product',
+      referencedColumnName: 'id',
     },
     inverseJoinColumn: {
-      name: "category",
-      referencedColumnName: "id"
-    }
+      name: 'category',
+      referencedColumnName: 'id',
+    },
   })
   categories: Category[];
 }
- 
+
 export default Product;
