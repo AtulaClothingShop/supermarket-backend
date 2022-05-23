@@ -28,7 +28,6 @@ export class ProductService {
     }
 
     async search(text: string) {
-        console.log("7777777777777777777777")
         const data = await this.elasticsearchService.search<ProductSearchResult>({
             index: this.index,
             body: {
@@ -53,16 +52,6 @@ export class ProductService {
         return products
     }
 
-    // async createPost(post: CreatePostDto, user: User) {
-    //     const newPost = await this.postsRepository.create({
-    //       ...post,
-    //       author: user
-    //     });
-    //     await this.postsRepository.save(newPost);
-    //     this.postsSearchService.indexPost(newPost);
-    //     return newPost;
-    //   }
-
     async searchForProducts(text: string) {
         const results = await this.search(text);
         const ids = results.map(result => result.id);
@@ -73,5 +62,22 @@ export class ProductService {
             .find({
                 where: { id: In(ids) }
             });
+    }
+
+    async createProduct(data) {
+        const { name, description, price, type, sizeRanges, productInfos } = data
+
+        let newProduct = new Product()
+        newProduct.name = name
+        newProduct.description = description
+        newProduct.price = price
+        newProduct.type = type
+        newProduct.sizeRanges = sizeRanges
+
+        let totalQuantity = 0
+        let _productInfos = []
+        productInfos.forEach(item => {
+            
+        })
     }
 }
