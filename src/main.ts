@@ -10,24 +10,25 @@ import getLogLevels from './utils/getLogLevels';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: getLogLevels(process.env.NODE_ENV === 'production'),
-    bufferLogs: true
+    bufferLogs: true,
   });
   app.useLogger(app.get(CustomLogger));
 
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
+      transformOptions: {
+        enableImplicitConversion: true, // allow conversion underneath
+      },
     }),
   );
   app.use(cookieParser());
 
-  app.useGlobalInterceptors(new ClassSerializerInterceptor(
-    app.get(Reflector))
-  );
-  
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(app.get(Reflector)));
+
   const httpAdapter = app.get(HttpAdapterHost);
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
-  
+
   await app.listen(process.env.PORT);
 }
 bootstrap();

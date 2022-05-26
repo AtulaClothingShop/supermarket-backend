@@ -1,9 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
+import ProductCode from 'src/entities/codeProduct.entity';
 import Product from 'src/entities/product.entity';
 import ProductInfo from 'src/entities/productInfo.entity';
 import { In, Repository } from 'typeorm';
+import { CreateProductDto } from './dto/createProduct.dto';
+import {
+  paginate,
+  Pagination,
+  IPaginationOptions,
+} from 'nestjs-typeorm-paginate';
 
 @Injectable()
 export class ProductService {
@@ -11,6 +18,9 @@ export class ProductService {
   constructor(
     @InjectRepository(Product)
     private productRepo: Repository<Product>,
+
+    @InjectRepository(ProductCode)
+    private productCodeRepo: Repository<ProductCode>,
 
     private readonly elasticsearchService: ElasticsearchService,
   ) {}
@@ -63,9 +73,12 @@ export class ProductService {
     });
   }
 
-  async createProduct(data) {
+  async getProducts(options: IPaginationOptions): Promise<Pagination<Product>> {
+    return paginate<Product>(this.productRepo, options);
+  }
+
+  async createProduct(data: CreateProductDto) {
     const {
-      code,
       name,
       description,
       price,
@@ -77,13 +90,22 @@ export class ProductService {
     } = data;
     console.log(data);
     const newProduct = new Product();
-    newProduct.code = code;
+    const productCode = await this.getUnusedCode();
+
+    if (!productCode) {
+      throw new HttpException(
+        'Not product code available',
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    newProduct.code = productCode;
     newProduct.name = name ?? '';
     newProduct.description = description ?? '';
-    newProduct.price = price ?? 0;
+    newProduct.price = price ? parseFloat(price) : 0;
     newProduct.type = type ?? '';
     newProduct.discount = Boolean(discount);
-    newProduct.discountAmount = discountAmount ? Number(discountAmount) : 0;
+    newProduct.discountAmount = discountAmount ? parseFloat(discountAmount) : 0;
     newProduct.sizeRanges = sizeRanges;
 
     let totalQuantity = 0;
@@ -111,7 +133,25 @@ export class ProductService {
     newProduct.categories = [];
     console.log(newProduct, _productInfos);
     await this.productRepo.save(newProduct);
+    await this.productCodeRepo.update(
+      {
+        code: productCode,
+      },
+      {
+        isUsed: true,
+      },
+    );
 
     return newProduct;
+  }
+
+  async getUnusedCode() {
+    const codeProduct = await this.productCodeRepo.findOne({
+      where: {
+        isUsed: false,
+      },
+    });
+
+    return codeProduct?.code;
   }
 }

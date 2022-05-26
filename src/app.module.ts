@@ -8,7 +8,7 @@ import * as Joi from '@hapi/joi';
 import { AuthModuleOptions } from '@nestjs/passport';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/user/users.module';
-import { APP_FILTER } from '@nestjs/core';
+import { APP_FILTER, RouterModule } from '@nestjs/core';
 import { AllExceptionsFilter } from './configs/decorators/catchError';
 import { ProductModule } from './modules/product/product.module';
 
@@ -44,6 +44,25 @@ import { ProductModule } from './modules/product/product.module';
     AuthModule,
     UsersModule,
     ProductModule,
+    RouterModule.register([
+      {
+        path: 'v1',
+        children: [
+          {
+            path: 'auth',
+            module: AuthModule,
+          },
+          {
+            path: 'user',
+            module: UsersModule,
+          },
+          {
+            path: 'product',
+            module: ProductModule,
+          },
+        ],
+      },
+    ]),
   ],
 })
 export class AppModule {

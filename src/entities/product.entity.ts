@@ -1,8 +1,7 @@
-import { float } from '@elastic/elasticsearch/lib/api/types';
+import { double, float } from '@elastic/elasticsearch/lib/api/types';
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   OneToMany,
@@ -12,8 +11,8 @@ import Category from './category.entity';
 import ProductInfo from './productInfo.entity';
 
 export enum ProductTypes {
-  MAN = 'man',
-  WOMAN = 'woman',
+  MEN = 'men',
+  WOMEN = 'women',
 }
 
 @Entity()
@@ -30,8 +29,8 @@ class Product {
   @Column()
   public description: string;
 
-  @Column()
-  public price: float;
+  @Column({ type: 'numeric', precision: 10, scale: 2 })
+  public price: number;
 
   @Column({
     type: 'enum',
@@ -45,7 +44,7 @@ class Product {
   @Column()
   public discount: boolean;
 
-  @Column()
+  @Column({ type: 'numeric', precision: 10, scale: 2 })
   public discountAmount: number;
 
   @Column('text', { array: true })
@@ -53,6 +52,7 @@ class Product {
 
   @OneToMany(() => ProductInfo, (productInfo) => productInfo.product, {
     cascade: true,
+    eager: true,
   })
   public productInfos: ProductInfo[];
 
