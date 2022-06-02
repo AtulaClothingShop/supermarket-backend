@@ -7,8 +7,10 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Res,
 } from '@nestjs/common';
 import { Pagination } from 'nestjs-typeorm-paginate';
+import { Response } from 'express';
 
 // Entity
 import Product from 'src/entities/product.entity';
@@ -31,15 +33,18 @@ export class ProductController {
 
   @Get('/')
   async getProducts(
+    @Res() response: Response,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-  ): Promise<Pagination<Product>> {
+  ) {
     limit = limit > 100 ? 100 : limit;
-    return this.productService.getProducts({
+    const products = await this.productService.getProducts({
       page,
       limit,
       route: '/',
     });
+
+    response.status(200).send(products);
   }
 
   @Post('/')
