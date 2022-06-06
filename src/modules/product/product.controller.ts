@@ -9,11 +9,7 @@ import {
   Query,
   Res,
 } from '@nestjs/common';
-import { Pagination } from 'nestjs-typeorm-paginate';
 import { Response } from 'express';
-
-// Entity
-import Product from 'src/entities/product.entity';
 
 // Dto
 import { CreateProductDto } from './dto/createProduct.dto';
@@ -48,7 +44,12 @@ export class ProductController {
   }
 
   @Post('/')
-  async createProduct(@Body() data: CreateProductDto) {
-    return this.productService.createProduct(data);
+  async createProduct(
+    @Res() response: Response,
+    @Body() data: CreateProductDto,
+  ) {
+    const product = await this.productService.createProduct(data);
+
+    response.status(201).send(product);
   }
 }

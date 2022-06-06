@@ -40,6 +40,9 @@ export class CreateProductDto {
 
   @IsArray()
   sizeRanges: string[];
+
+  @IsArray()
+  colors: string[];
 }
 
 class ProductInfoDto {

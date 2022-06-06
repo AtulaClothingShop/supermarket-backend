@@ -87,6 +87,7 @@ export class ProductService {
       discountAmount,
       productInfos,
       sizeRanges = [],
+      colors = [],
     } = data;
     console.log(data);
     const newProduct = new Product();
@@ -107,6 +108,7 @@ export class ProductService {
     newProduct.discount = Boolean(discount);
     newProduct.discountAmount = discountAmount ? parseFloat(discountAmount) : 0;
     newProduct.sizeRanges = sizeRanges;
+    newProduct.colors = colors;
 
     let totalQuantity = 0;
     const _productInfos = [];

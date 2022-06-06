@@ -51,6 +51,9 @@ class Product {
   @Column('text', { array: true })
   public sizeRanges: string[];
 
+  @Column('text', { array: true })
+  public colors: string[];
+
   @OneToMany(() => ProductInfo, (productInfo) => productInfo.product, {
     cascade: true,
     eager: true,
