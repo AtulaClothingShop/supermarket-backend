@@ -4,7 +4,7 @@ import { ConfigModule } from '@nestjs/config';
 import LogsService from './logs.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import Log from 'src/entities/log.entity';
- 
+
 @Module({
   imports: [ConfigModule, TypeOrmModule.forFeature([Log])],
   providers: [CustomLogger, LogsService],

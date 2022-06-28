@@ -1,0 +1,23 @@
+service:
+  env: dev
+
+server:
+  port: 5000
+
+postgres:
+  host: localhost
+  port: 5432
+  username: admin
+  password: admin
+  database: clothing-shop
+
+elastic_search:
+  node: http://localhost:9200
+  username: elastic
+  password: admin
+
+jwt: 
+  jwt_secret: vunam2000
+  jwt_expiration_time: 86400
+  jwt_refresh_token_secret: vunam2000
+  jwt_refresh_token_expiration_time: 864000

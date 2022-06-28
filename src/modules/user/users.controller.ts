@@ -13,7 +13,7 @@ import {
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
-import { AllExceptionsFilter } from 'src/configs/decorators/catchError';
+import { AllExceptionsFilter } from 'src/decorators/catchError';
 import JwtAuthGuard from '../auth/guard/jwtAuth.guard';
 import UpdateUserDto from './dto/updateUser.dto';
 import { UsersService } from './users.service';

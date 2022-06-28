@@ -1,0 +1,8 @@
+service:
+  env: NODE_ENV
+
+jwt: 
+  jwt_secret: JWT_SECRET
+  jwt_expiration_time: JWT_EXPIRATION_TIME
+  jwt_refresh_token_secret: JWT_REFRESH_TOKEN_SECRET
+  jwt_refresh_token_expiration_time: JWT_REFRESH_TOKEN_EXPIRATION_TIME
