@@ -3,7 +3,7 @@ import { HttpAdapterHost, NestFactory, Reflector } from '@nestjs/core';
 import * as cookieParser from 'cookie-parser';
 
 import { AppModule } from './app.module';
-import { AllExceptionsFilter } from './configs/decorators/catchError';
+import { AllExceptionsFilter } from './decorators/catchError';
 import CustomLogger from './modules/log/customLogger';
 import getLogLevels from './utils/getLogLevels';
 
