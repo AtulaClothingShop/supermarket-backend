@@ -21,6 +21,7 @@ import { CONFIG } from '../config/config.service';
           seeds: ['src/seeding/seeds/**/*{.ts,.js}'],
           factories: ['src/seeding/factories/**/*{.ts,.js}'],
           synchronize: true,
+          autoLoadEntities: true,
         };
       },
     }),

@@ -9,6 +9,7 @@ const bcrypt = require('bcrypt');
 import Role from 'src/entities/role.entity';
 import User from 'src/entities/user.entity';
 import Address from 'src/entities/address.entity';
+import ProductCode from 'src/entities/productCode.entity';
 
 @Injectable()
 export class SeederService {
@@ -23,10 +24,14 @@ export class SeederService {
 
     @InjectRepository(Address)
     private addressRepo: Repository<Address>,
+
+    @InjectRepository(ProductCode)
+    private productCodeRepo: Repository<ProductCode>,
   ) {}
 
   async seed() {
     await this.seedUsers();
+    await this.seedProductCode();
   }
 
   async seedUsers() {
@@ -72,6 +77,27 @@ export class SeederService {
       this.logger.debug('Successfuly completed seeding users...');
     } catch (error) {
       this.logger.error('Failed seeding users...');
+    }
+  }
+
+  async seedProductCode() {
+    try {
+      // Delete all code
+      await this.productCodeRepo.delete({});
+      const codes = [];
+
+      // Random product code
+      for (let i = 0; i < 100; i++) {
+        const codeTemp = new ProductCode();
+        codeTemp.code = 'CODE' + i;
+
+        codes.push(this.productCodeRepo.save(codeTemp));
+      }
+      await Promise.all(codes);
+
+      this.logger.debug('Successfuly completed seeding codes...');
+    } catch (error) {
+      this.logger.error('Failed seeding codes...');
     }
   }
 }

@@ -11,9 +11,10 @@ import Category from './category.entity';
 import ProductInfo from './productInfo.entity';
 
 export enum ProductTypes {
-  MEN = 'MEN',
-  WOMEN = 'WOMEN',
-  KID = 'KID',
+  CANDY = 'CANDY',
+  CAKE = 'CAKE',
+  DRINK = 'DRINK',
+  OTHER = 'OTHER',
 }
 
 @Entity()

@@ -6,12 +6,16 @@ import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './decorators/catchError';
 import CustomLogger from './modules/log/customLogger';
 import getLogLevels from './utils/getLogLevels';
+import { IConfig } from 'config';
+import { CONFIG } from './modules/config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
     logger: getLogLevels(process.env.NODE_ENV === 'production'),
     bufferLogs: true,
   });
+  const config: IConfig = app.get(CONFIG);
+
   app.useLogger(app.get(CustomLogger));
 
   app.useGlobalPipes(
@@ -31,7 +35,7 @@ async function bootstrap() {
   app.useGlobalFilters(new AllExceptionsFilter(httpAdapter));
 
   // CORS
-  const whitelist = ['http://localhost:3000', 'http://localhost:3001'];
+  const whitelist = ['*', 'http://localhost:3000', 'http://localhost:3001'];
   app.enableCors({
     origin: function (origin, callback) {
       if (whitelist.indexOf(origin) !== -1) {
@@ -47,6 +51,6 @@ async function bootstrap() {
     credentials: true,
   });
 
-  await app.listen(process.env.PORT);
+  await app.listen(config.get('server.port'));
 }
 bootstrap();

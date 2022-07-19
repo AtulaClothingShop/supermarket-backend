@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
-import ProductCode from 'src/entities/codeProduct.entity';
+import ProductCode from 'src/entities/productCode.entity';
 import Product from 'src/entities/product.entity';
 import ProductInfo from 'src/entities/productInfo.entity';
 import { In, Repository } from 'typeorm';
