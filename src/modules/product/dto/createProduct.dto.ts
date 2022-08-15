@@ -15,23 +15,12 @@ export class CreateProductDto {
   name: string;
 
   @IsString()
-  price: string;
-
-  @IsString()
   @IsOptional()
   description: string;
 
   @IsString()
   @IsEnum(ProductTypes)
   type: string;
-
-  @IsBoolean()
-  @IsOptional()
-  discount: boolean;
-
-  @IsString()
-  @IsOptional()
-  discountAmount: string;
 
   @IsArray()
   @ValidateNested()
@@ -40,6 +29,9 @@ export class CreateProductDto {
 
   @IsArray()
   sizeRanges: string[];
+
+  @IsArray()
+  colors: string[];
 }
 
 class ProductInfoDto {
@@ -53,6 +45,20 @@ class ProductInfoDto {
   @IsString()
   size: string;
 
+  @IsString()
+  buyPrice: string;
+
+  @IsString()
+  sellPrice: string;
+
   @IsNumber()
   quantity: number;
+
+  @IsBoolean()
+  @IsOptional()
+  discount: boolean;
+
+  @IsString()
+  @IsOptional()
+  discountAmount: string;
 }

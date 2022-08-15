@@ -11,8 +11,10 @@ import Category from './category.entity';
 import ProductInfo from './productInfo.entity';
 
 export enum ProductTypes {
-  MEN = 'men',
-  WOMEN = 'women',
+  CANDY = 'CANDY',
+  CAKE = 'CAKE',
+  DRINK = 'DRINK',
+  OTHER = 'OTHER',
 }
 
 @Entity()
@@ -29,9 +31,6 @@ class Product {
   @Column()
   public description: string;
 
-  @Column({ type: 'numeric', precision: 10, scale: 2 })
-  public price: number;
-
   @Column({
     type: 'enum',
     enum: ProductTypes,
@@ -41,14 +40,11 @@ class Product {
   @Column()
   public totalQuantity: number;
 
-  @Column()
-  public discount: boolean;
-
-  @Column({ type: 'numeric', precision: 10, scale: 2 })
-  public discountAmount: number;
-
   @Column('text', { array: true })
   public sizeRanges: string[];
+
+  @Column('text', { array: true })
+  public colors: string[];
 
   @OneToMany(() => ProductInfo, (productInfo) => productInfo.product, {
     cascade: true,

@@ -1,24 +1,29 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule, ConfigService } from '@nestjs/config';
- 
+import { IConfig } from 'config';
+import { ConfigModule } from '../config/config.module';
+import { CONFIG } from '../config/config.service';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('POSTGRES_HOST'),
-        port: configService.get('POSTGRES_PORT'),
-        username: configService.get('POSTGRES_USER'),
-        password: configService.get('POSTGRES_PASSWORD'),
-        database: configService.get('POSTGRES_DB'),
-        entities: [
-          'dist/**/*.entity.js',
-        ],
-        synchronize: true,
-      })
+      inject: [CONFIG],
+      useFactory: (config: IConfig) => {
+        return {
+          type: 'postgres',
+          host: config.get('postgres.host'),
+          port: config.get('postgres.port'),
+          username: config.get('postgres.username'),
+          password: config.get('postgres.password'),
+          database: config.get('postgres.database'),
+          entities: ['dist/**/*.entity.js'],
+          seeds: ['src/seeding/seeds/**/*{.ts,.js}'],
+          factories: ['src/seeding/factories/**/*{.ts,.js}'],
+          synchronize: true,
+          autoLoadEntities: true,
+        };
+      },
     }),
   ],
 })

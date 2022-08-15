@@ -7,11 +7,9 @@ import {
   ParseIntPipe,
   Post,
   Query,
+  Res,
 } from '@nestjs/common';
-import { Pagination } from 'nestjs-typeorm-paginate';
-
-// Entity
-import Product from 'src/entities/product.entity';
+import { Response } from 'express';
 
 // Dto
 import { CreateProductDto } from './dto/createProduct.dto';
@@ -31,19 +29,37 @@ export class ProductController {
 
   @Get('/')
   async getProducts(
+    @Res() response: Response,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page = 1,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit = 10,
-  ): Promise<Pagination<Product>> {
+  ) {
     limit = limit > 100 ? 100 : limit;
-    return this.productService.getProducts({
+    const products = await this.productService.getProducts({
       page,
       limit,
       route: '/',
     });
+
+    response.status(200).send(products);
   }
 
   @Post('/')
-  async createProduct(@Body() data: CreateProductDto) {
-    return this.productService.createProduct(data);
+  async createProduct(
+    @Res() response: Response,
+    @Body() data: CreateProductDto,
+  ) {
+    const product = await this.productService.createProduct(data);
+
+    response.status(201).send(product);
+  }
+
+  @Get('/:productId')
+  async getProductDetail(
+    @Res() response: Response,
+    @Body() data: CreateProductDto,
+  ) {
+    const product = await this.productService.createProduct(data);
+
+    response.status(201).send(product);
   }
 }

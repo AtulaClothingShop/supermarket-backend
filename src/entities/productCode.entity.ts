@@ -8,7 +8,7 @@ class ProductCode {
   @Column({ unique: true })
   public code: string;
 
-  @Column()
+  @Column({ default: false })
   public isUsed: boolean;
 }
 

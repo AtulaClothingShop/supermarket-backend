@@ -1,45 +1,28 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import LoggerMiddleware from './configs/middlewares/logger.middleware';
+import LoggerMiddleware from './middlewares/logger.middleware';
 import { DatabaseModule } from './modules/database/database.module';
 import { LoggerModule } from './modules/log/logs.module';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ConfigModule } from '@nestjs/config';
-import * as Joi from '@hapi/joi';
-import { AuthModuleOptions } from '@nestjs/passport';
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/user/users.module';
 import { APP_FILTER, RouterModule } from '@nestjs/core';
-import { AllExceptionsFilter } from './configs/decorators/catchError';
+import { AllExceptionsFilter } from './decorators/catchError';
 import { ProductModule } from './modules/product/product.module';
+import { ConfigModule } from './modules/config/config.module';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
 
 @Module({
+  controllers: [AppController],
   providers: [
     {
       provide: APP_FILTER,
       useClass: AllExceptionsFilter,
     },
+    AppService,
   ],
   imports: [
     LoggerModule,
-    ConfigModule.forRoot({
-      validationSchema: Joi.object({
-        // PostgresQL
-        POSTGRES_HOST: Joi.string().required(),
-        POSTGRES_PORT: Joi.number().required(),
-        POSTGRES_USER: Joi.string().required(),
-        POSTGRES_PASSWORD: Joi.string().required(),
-        POSTGRES_DB: Joi.string().required(),
-
-        // Port server
-        PORT: Joi.number(),
-
-        // JWT
-        JWT_SECRET: Joi.string().required(),
-        JWT_EXPIRATION_TIME: Joi.string().required(),
-        JWT_REFRESH_TOKEN_SECRET: Joi.string().required(),
-        JWT_REFRESH_TOKEN_EXPIRATION_TIME: Joi.string().required(),
-      }),
-    }),
+    ConfigModule,
     DatabaseModule,
     AuthModule,
     UsersModule,

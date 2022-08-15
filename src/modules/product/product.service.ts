@@ -1,7 +1,7 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { ElasticsearchService } from '@nestjs/elasticsearch';
 import { InjectRepository } from '@nestjs/typeorm';
-import ProductCode from 'src/entities/codeProduct.entity';
+import ProductCode from 'src/entities/productCode.entity';
 import Product from 'src/entities/product.entity';
 import ProductInfo from 'src/entities/productInfo.entity';
 import { In, Repository } from 'typeorm';
@@ -32,7 +32,6 @@ export class ProductService {
         id: product.id,
         code: product.code,
         name: product.name,
-        price: product.price,
       },
     });
   }
@@ -81,12 +80,10 @@ export class ProductService {
     const {
       name,
       description,
-      price,
       type,
-      discount,
-      discountAmount,
       productInfos,
       sizeRanges = [],
+      colors = [],
     } = data;
     console.log(data);
     const newProduct = new Product();
@@ -102,11 +99,9 @@ export class ProductService {
     newProduct.code = productCode;
     newProduct.name = name ?? '';
     newProduct.description = description ?? '';
-    newProduct.price = price ? parseFloat(price) : 0;
     newProduct.type = type ?? '';
-    newProduct.discount = Boolean(discount);
-    newProduct.discountAmount = discountAmount ? parseFloat(discountAmount) : 0;
     newProduct.sizeRanges = sizeRanges;
+    newProduct.colors = colors;
 
     let totalQuantity = 0;
     const _productInfos = [];
@@ -115,7 +110,11 @@ export class ProductService {
         const productInfo = new ProductInfo();
         productInfo.color = item.color ?? '';
         productInfo.size = item.size ?? '';
+        productInfo.buyPrice = item.buyPrice ?? '';
+        productInfo.sellPrice = item.sellPrice ?? '';
         productInfo.quantity = item.quantity ? Number(item.quantity) : 0;
+        productInfo.discount = Boolean(item.discount);
+        productInfo.discountAmount = item.discountAmount ?? '';
 
         if (item.images?.length > 0) {
           productInfo.images = item.images;
