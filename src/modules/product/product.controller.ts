@@ -52,4 +52,14 @@ export class ProductController {
 
     response.status(201).send(product);
   }
+
+  @Get('/:productId')
+  async getProductDetail(
+    @Res() response: Response,
+    @Body() data: CreateProductDto,
+  ) {
+    const product = await this.productService.createProduct(data);
+
+    response.status(201).send(product);
+  }
 }

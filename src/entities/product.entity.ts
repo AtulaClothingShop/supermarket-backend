@@ -31,9 +31,6 @@ class Product {
   @Column()
   public description: string;
 
-  @Column({ type: 'numeric', precision: 10, scale: 2 })
-  public price: number;
-
   @Column({
     type: 'enum',
     enum: ProductTypes,
@@ -42,12 +39,6 @@ class Product {
 
   @Column()
   public totalQuantity: number;
-
-  @Column()
-  public discount: boolean;
-
-  @Column({ type: 'numeric', precision: 10, scale: 2 })
-  public discountAmount: number;
 
   @Column('text', { array: true })
   public sizeRanges: string[];

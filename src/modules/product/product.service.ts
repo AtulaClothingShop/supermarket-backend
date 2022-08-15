@@ -32,7 +32,6 @@ export class ProductService {
         id: product.id,
         code: product.code,
         name: product.name,
-        price: product.price,
       },
     });
   }
@@ -81,10 +80,7 @@ export class ProductService {
     const {
       name,
       description,
-      price,
       type,
-      discount,
-      discountAmount,
       productInfos,
       sizeRanges = [],
       colors = [],
@@ -103,10 +99,7 @@ export class ProductService {
     newProduct.code = productCode;
     newProduct.name = name ?? '';
     newProduct.description = description ?? '';
-    newProduct.price = price ? parseFloat(price) : 0;
     newProduct.type = type ?? '';
-    newProduct.discount = Boolean(discount);
-    newProduct.discountAmount = discountAmount ? parseFloat(discountAmount) : 0;
     newProduct.sizeRanges = sizeRanges;
     newProduct.colors = colors;
 
@@ -117,7 +110,11 @@ export class ProductService {
         const productInfo = new ProductInfo();
         productInfo.color = item.color ?? '';
         productInfo.size = item.size ?? '';
+        productInfo.buyPrice = item.buyPrice ?? '';
+        productInfo.sellPrice = item.sellPrice ?? '';
         productInfo.quantity = item.quantity ? Number(item.quantity) : 0;
+        productInfo.discount = Boolean(item.discount);
+        productInfo.discountAmount = item.discountAmount ?? '';
 
         if (item.images?.length > 0) {
           productInfo.images = item.images;

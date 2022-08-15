@@ -15,8 +15,20 @@ class ProductInfo {
   @Column()
   public size: string;
 
-  @Column()
+  @Column({ default: 0 })
   public quantity: number;
+
+  @Column()
+  public buyPrice: string;
+
+  @Column()
+  public sellPrice: string;
+
+  @Column({ default: false })
+  public discount: boolean;
+
+  @Column({ default: '' })
+  public discountAmount: string;
 
   @ManyToOne(() => Product, (product) => product.productInfos)
   public product: Product;
